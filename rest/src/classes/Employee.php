@@ -52,7 +52,7 @@ class Employee
     {
         // Если у сотрудника стоит дата увольнения и при этом он активен, сделать не активным
 		if((!empty($this->props['DISMISS_DATE']) && $res['ACTIVE'] == 'Y') || (empty($this->props['DISMISS_DATE']) && $res['ACTIVE'] == 'N')) {
-			$activity = 'N';
+			$this->activity = 'N';
 		}
 
 		// Изменяем свойства сотрудника
