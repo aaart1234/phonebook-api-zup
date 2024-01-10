@@ -12,15 +12,25 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/local/rest/src/classes/Employee.php")
 if(CModule::IncludeModule("iblock")):
 	// Принимаем и очищаем данные сотрудника из запроса
 	if($_SERVER['REQUEST_METHOD'] == 'POST') {
-		$employeeFields = new EmployeeFields($_POST['sectionId'], $_POST['name']);
+
+		$requestBody = json_decode(file_get_contents('php://input'));
+		$headers = implode("\n", getallheaders());
+		$date = new DateTime();
+		$date = $date->format("y:m:d h:i:s");
+		$str = $date . $headers . file_get_contents('php://input');
+		$filename = __DIR__.'/log.txt';
+
+		file_put_contents($filename, PHP_EOL . $str, FILE_APPEND); // Лог
+
+		$employeeFields = new EmployeeFields($requestBody->sectionId, $requestBody->name);
 		$employeeProps = new EmployeeProps(
 			$employeeFields,
 			array(
-			'BIRTH_DAY' => $_POST['birthDay'],
-			'POSITION' => $_POST['position'], 
+			'BIRTH_DAY' => $requestBody->birthDay,
+			'POSITION' => $requestBody->position, 
 			'DEPARTMENT' => "",
-			'GUID_ZUP' => $_POST['guidZup'], 
-			'DISMISS_DATE' => $_POST['dismissDate']
+			'GUID_ZUP' => $requestBody->guidZup, 
+			'DISMISS_DATE' => $requestBody->dismissDate
 			)
 		);
 		$employee = new Employee($employeeFields, $employeeProps);
@@ -37,4 +47,3 @@ endif;
 
 
 ?>
-
