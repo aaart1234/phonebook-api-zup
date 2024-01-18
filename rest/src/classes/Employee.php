@@ -48,6 +48,7 @@ class Employee
         return CIBlockElement::GetList(Array(), $arFilter, false, "", $arSelect)->fetch();
     }
 
+	// Метод обновления сотрудника
     public function update(array $res, $userId)
     {
         // Если у сотрудника стоит дата увольнения и при этом он активен, сделать не активным
@@ -55,13 +56,12 @@ class Employee
 			$this->activity = 'N';
 		}
 
-		// Изменяем свойства сотрудника
+		// Изменяем поля сотрудника
 		$employeeArr = array(
 			"MODIFIED_BY"    => $userId, // элемент изменен текущим пользователем
-			"PROPERTY_VALUES"=> $this->props,
+			false,
 			"NAME"           => $this->name,
 			"ACTIVE"         => $this->activity,
-			"IBLOCK_SECTION_ID" => $this->sectionId,
 		  );
 	  
 		  $el = new CIBlockElement;
@@ -73,8 +73,22 @@ class Employee
 		  else {
 			  echo "Error: ".$el->LAST_ERROR;
 		  }
+
+		// Изменяем свойства сотрудника
+		  $itemElement = CIBlockElement::GetByID($res['ID'])->Fetch();
+          $itemSection = CIBlockSection::GetByID($itemElement["IBLOCK_SECTION_ID"])->Fetch();
+          $department = $itemSection['NAME'];
+
+		  $this->props['DEPARTMENT'] = $department;
+
+		  CIBlockElement::SetPropertyValuesEx(
+			$res['ID'],
+			5,
+			$this->props,
+		   );
     }
 
+	// Метод создания нового сотрудника
     public function create($userId)
     {
         // Добавляем нового сотрудника
