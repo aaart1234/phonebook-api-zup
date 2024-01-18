@@ -18,8 +18,7 @@ class EmployeeProps
         {
             $this->props[$property] = htmlentities(trim($value));
         }
-        // Добавляем в массив свойств "Отдел" и проверяем поле GUID_ZUP
-        $this->props['DEPARTMENT'] = $this->employeeFields->getSectionName();
+        
         $this->props['GUID_ZUP'] = !null == $this->props['GUID_ZUP'] && !empty($this->props['GUID_ZUP']) ? $this->props['GUID_ZUP'] : die('Поле GUID ЗУП должно быть заполнено!');
 
         return $this->props;
