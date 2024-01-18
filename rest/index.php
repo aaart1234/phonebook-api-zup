@@ -30,7 +30,8 @@ if(CModule::IncludeModule("iblock")):
 			'POSITION' => $requestBody->position, 
 			'DEPARTMENT' => "",
 			'GUID_ZUP' => $requestBody->guidZup, 
-			'DISMISS_DATE' => $requestBody->dismissDate
+			'DISMISS_DATE' => $requestBody->dismissDate, 
+			'VACATION_DATE' => $requestBody->vacationDate
 			)
 		);
 		$employee = new Employee($employeeFields, $employeeProps);
